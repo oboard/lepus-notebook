@@ -4,7 +4,8 @@
   "deps": {
     "lepus-apps/lepus": "0.1.7",
     "lepus-apps/webview": "0.1.11",
-    "moonbitlang/async": "0.18.0"
+    "moonbitlang/async": "0.18.0",
+    "oboard/morm": "0.3.10"
   },
   "bin-deps": {
     "oboard/morm": "0.3.9"

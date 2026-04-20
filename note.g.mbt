@@ -38,6 +38,34 @@ pub fn Note::table() -> @oboard/morm.Table {
         default_value: None,
         engine_options: [],
       },
+      {
+        name: "created_at",
+        column_type: DateTime,
+        size: 0,
+        nullable: true,
+        auto_increment: false,
+        primary_key: false,
+        unique: false,
+        comment: "",
+        charset: None,
+        collation: None,
+        default_value: None,
+        engine_options: [],
+      },
+      {
+        name: "updated_at",
+        column_type: DateTime,
+        size: 0,
+        nullable: true,
+        auto_increment: false,
+        primary_key: false,
+        unique: false,
+        comment: "",
+        charset: None,
+        collation: None,
+        default_value: None,
+        engine_options: [],
+      },
     ],
     indexes: [],
     foreign_keys: [],
@@ -68,7 +96,23 @@ pub fn Note::_from(row : Map[String, @engine.Param]) -> Note {
     None => panic()
   }
   let content : String = (try! @engine.from_param(content_param) : String)
-  return Note::{ id, content }
+  let created_at_param = match row.get("created_at") {
+    Some(value) => value
+    None => panic()
+  }
+  let created_at : PlainDateTime? = match created_at_param {
+    Null => None
+    _ => Some((try! @engine.from_param(created_at_param) : PlainDateTime))
+  }
+  let updated_at_param = match row.get("updated_at") {
+    Some(value) => value
+    None => panic()
+  }
+  let updated_at : PlainDateTime? = match updated_at_param {
+    Null => None
+    _ => Some((try! @engine.from_param(updated_at_param) : PlainDateTime))
+  }
+  return Note::{ id, content, created_at, updated_at }
 }
 
 ///|
@@ -102,6 +146,11 @@ pub fn NoteMapperImpl::new(engine : &@engine.Engine) -> NoteMapperImpl {
 
 ///|
 pub impl NoteMapper for NoteMapperImpl with save(self, entity : Note) -> Note {
+  let entity = {
+    ..entity,
+    created_at: Some(@oboard/morm.current_plain_date_time_utc()),
+    updated_at: Some(@oboard/morm.current_plain_date_time_utc()),
+  }
   let q = @oboard/morm.upsert_into("note").from(entity)
   let res = self.engine.exec(q)
   if res.rows is [result, ..] {
