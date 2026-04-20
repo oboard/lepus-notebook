@@ -6,6 +6,7 @@ async fn main {
   @lepus.Window::new(title="Lepus Vite Example", source~, debug=1, plugins=[
     @webview.Plugin::new("database", plugin => {
       plugin.command("save", (note : Note) => note_mapper.save(note))
+      plugin.command("delete", (note : Note) => note_mapper.delete(note))
       plugin.command("list", (pageable : @engine.Pageable) => {
         note_mapper.find_all(pageable)
       })

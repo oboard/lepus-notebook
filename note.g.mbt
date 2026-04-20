@@ -15,14 +15,14 @@ pub fn Note::table() -> @oboard/morm.Table {
         column_type: Int,
         size: 0,
         nullable: false,
-        auto_increment: false,
+        auto_increment: true,
         primary_key: true,
         unique: false,
         comment: "",
         charset: None,
         collation: None,
         default_value: None,
-        engine_options: [],
+        engine_options: [{ key: "pk.strategy", value: "auto_increment" }],
       },
       {
         name: "content",
@@ -59,7 +59,10 @@ pub fn Note::_from(row : Map[String, @engine.Param]) -> Note {
     Some(value) => value
     None => panic()
   }
-  let id : Int = (try! @engine.from_param(id_param) : Int)
+  let id : Int? = match id_param {
+    Null => None
+    _ => Some((try! @engine.from_param(id_param) : Int))
+  }
   let content_param = match row.get("content") {
     Some(value) => value
     None => panic()
@@ -105,6 +108,12 @@ pub impl NoteMapper for NoteMapperImpl with save(self, entity : Note) -> Note {
     return Note::_from(result)
   }
   panic()
+}
+
+///|
+pub impl NoteMapper for NoteMapperImpl with delete(self, entity : Note) -> Bool {
+  let q = @oboard/morm.delete_from("note").from(entity)
+  self.engine.exec(q).ok
 }
 
 ///|

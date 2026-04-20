@@ -4,7 +4,7 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "preinstall": "moon add lepus-apps/lepus && cd .mooncakes/lepus-apps/lepus && moon build cli/cc cli/lepus --release && cd ../../..",
+    "preinstall": "moon add lepus-apps/lepus && cd .mooncakes/lepus-apps/lepus && moon build cli/cc cli/lepus --release && cd ../../.. && vite build && .mooncakes/lepus-apps/lepus/_build/native/release/build/cli/lepus/lepus.exe build",
     "start": "vite",
     "preview": "vite preview",
     "build": "tsc && vite build && .mooncakes/lepus-apps/lepus/_build/native/release/build/cli/lepus/lepus.exe build && moon build --release",

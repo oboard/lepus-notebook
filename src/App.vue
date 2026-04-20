@@ -26,7 +26,7 @@ async function loadNotes() {
 async function addNote() {
   if (!newNoteContent.value.trim()) return
   try {
-    const note: Note = { id: 0, content: newNoteContent.value }
+    const note: Note = { content: newNoteContent.value }
     await lepusApi.database.save(note)
     newNoteContent.value = ''
     await loadNotes()
@@ -37,7 +37,7 @@ async function addNote() {
 
 async function deleteNote(id: number) {
   try {
-    await lepusApi.database.save({ id, content: '' })
+    await lepusApi.database.delete({ id, content: '' })
     await loadNotes()
   } catch (e) {
     console.error('Failed to delete note:', e)
@@ -57,12 +57,7 @@ onMounted(() => {
     </header>
 
     <div class="add-form">
-      <input
-        v-model="newNoteContent"
-        type="text"
-        placeholder="Write a new note..."
-        @keyup.enter="addNote"
-      />
+      <input v-model="newNoteContent" type="text" placeholder="Write a new note..." @keyup.enter="addNote" />
       <button @click="addNote" :disabled="!newNoteContent.trim()">Add</button>
     </div>
 
@@ -71,7 +66,7 @@ onMounted(() => {
     <div v-else class="notes-list">
       <div v-for="note in notes" :key="note.id" class="note-item">
         <div class="note-content">{{ note.content }}</div>
-        <button class="delete-btn" @click="deleteNote(note.id)">Delete</button>
+        <button v-if="note.id !== undefined" class="delete-btn" @click="deleteNote(note.id)">Delete</button>
       </div>
 
       <div v-if="notes.length === 0 && !loading" class="empty">

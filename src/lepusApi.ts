@@ -1,5 +1,5 @@
 export interface Note {
-  id: number
+  id?: number
   content: string
 }
 
@@ -27,6 +27,7 @@ export interface Page<T> {
 
 export interface DatabaseApi {
   save: (note: Note) => Promise<Note>
+  delete: (note: Note) => Promise<boolean>
   list: (pageable: Pageable) => Promise<Page<Note>>
 }
 

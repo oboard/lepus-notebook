@@ -2,7 +2,8 @@
 #morm.entity
 struct Note {
   #morm.id
-  id : Int
+  #morm.default(autoincrement())
+  id : Int?
   content : String
 } derive(Debug, ToJson, FromJson)
 
@@ -10,6 +11,7 @@ struct Note {
 #morm.mapper(table="note")
 trait NoteMapper {
   async save(Self, entity : Note) -> Note
+  async delete(Self, entity : Note) -> Bool
   async find_all(
     Self,
     pageable : @engine.Pageable,
