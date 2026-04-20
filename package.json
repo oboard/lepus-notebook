@@ -1,0 +1,20 @@
+{
+  "name": "lepus-notebook",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "preinstall": "moon add lepus-apps/lepus && cd .mooncakes/lepus-apps/lepus && moon build cli/cc cli/lepus --release && cd ../../..",
+    "start": "vite",
+    "preview": "vite preview",
+    "build": "tsc && vite build && .mooncakes/lepus-apps/lepus/_build/native/release/build/cli/lepus/lepus.exe build && moon build --release",
+    "dev": "concurrently -k \"vite dev --port 2333\" \"moon run main.mbt\""
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^6.0.6",
+    "concurrently": "^9.2.1",
+    "typescript": "^6.0.2",
+    "vite": "^8.0.8",
+    "vue": "^3.5.13"
+  }
+}
