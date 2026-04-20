@@ -127,7 +127,12 @@ async function createNote() {
   await selectNote(note)
 }
 
-function selectNote(note: Note) {
+async function selectNote(note: Note) {
+  // 切换前先把当前未保存的内容强制保存
+  if (currentNote.value && currentNote.value.id !== note.id) {
+    clearTimeout(saveTimer)
+    await doSave()
+  }
   currentNote.value = { ...note }
   activeId.value = note.id ?? null
   nextTick(() => editorEl.value?.focus())
@@ -205,7 +210,16 @@ function focusEditor() {
   editorEl.value?.focus()
 }
 
-onMounted(() => loadNotes())
+onMounted(() => {
+  loadNotes()
+  // 切换标签页 / 最小化窗口时立即保存
+  document.addEventListener('visibilitychange', () => {
+    if (document.visibilityState === 'hidden') {
+      clearTimeout(saveTimer)
+      doSave()
+    }
+  })
+})
 </script>
 
 <style>
