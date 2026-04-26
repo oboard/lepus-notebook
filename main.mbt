@@ -3,7 +3,7 @@ async fn main {
   let engine = @sqlite3.SQLiteEngine::open("data.db")
   let note_mapper = NoteMapperImpl::new(engine)
   @morm.auto_migrate(engine, [Note::table()])
-  @lepus.Window::new(title="Lepus Vite Example", source~, debug=1, plugins=[
+  @lepus.Window::new(title="Lepus Note", source~, debug=1, plugins=[
     @webview.Plugin::new("database", plugin => {
       plugin.command("save", (note : Note) => {
         println(note.to_json().stringify())
